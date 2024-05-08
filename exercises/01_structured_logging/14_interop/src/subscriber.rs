@@ -1,4 +1,5 @@
 use helpers::MockWriter;
+use tracing_log::LogTracer;
 use tracing_subscriber::fmt::format::FmtSpan;
 
 pub fn init_test_subscriber() -> MockWriter {
@@ -10,7 +11,7 @@ pub fn init_test_subscriber() -> MockWriter {
         .compact()
         .init();
 
-    // TODO: redirect `log` events to `tracing`!
+    LogTracer::init().unwrap();
 
     writer2
 }
