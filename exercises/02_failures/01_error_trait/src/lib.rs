@@ -51,7 +51,9 @@ use std::error::Error;
 use std::fmt::{Debug, Write};
 use std::fmt::{Display, Formatter};
 use std::io::ErrorKind;
+use tracing::field;
 use tracing::field::Empty;
+use tracing::Span;
 
 mod subscriber;
 
@@ -75,7 +77,10 @@ fn telemetry_wrapper() -> Result<(), OpaqueError> {
     let outcome = fallible_operation();
     if let Err(e) = &outcome {
         // Check out the methods in the `tracing::field` module!
-        todo!()
+        Span::current()
+            .record("error.msg", field::display(&e))
+            .record("error.debug", field::debug(&e))
+            .record("error.source_chain", source_chain(e));
     }
     outcome
 }
